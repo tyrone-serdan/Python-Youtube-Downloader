@@ -1,4 +1,5 @@
 from customtkinter import *
+from customtkinter import filedialog
 from structures.youtube import *
 
 # yt = Video(
@@ -27,6 +28,7 @@ class App(CTk):
         self.path_label.grid(row=1, column=0, padx=10, pady=10)
 
         self.path_entry = CTkTextbox(self.input_frame, height=10)
+        self.path_entry.bind("<Button-1>", command=self.get_download_path_from_fp)
         self.path_entry.grid(row=1, column=1, padx=10, pady=10)
 
         self.download_btn = CTkButton(self.input_frame, text="Download Video", command=self.get_video)
@@ -46,16 +48,19 @@ class App(CTk):
         # self.author_label = CTkLabel(self.results_frame, text="author")
         # self.author_label.grid(row=2, column=0, padx=10, pady=10)
 
+    def get_download_path_from_fp(self, arg):
+        # idk why i need to pass a random parameter
+        # named arg ?? it gives me error without it so
+        
+        download_path = filedialog.askdirectory(initialdir=DEFAULT_PATH)
+        self.path_entry.delete("1.0", END)
+        self.path_entry.insert("1.0", download_path.strip())
+
     def get_video(self):
-        url_error_text = "Input a valid URL"
+        URL_ERROR_TEXT = "Input a valid URL"
+
         path = self.path_entry.get("1.0", END)
         url = self.url_entry.get("1.0", END)
-
-        if path.__len__() >= 1:
-            path.strip()
-
-        if url.__len__() >= 1:
-            url.strip()
 
         if len(path) == 1:
             self.path_entry.delete("1.0", END)
@@ -65,33 +70,16 @@ class App(CTk):
             
         if len(url) == 1:
             self.url_entry.delete("1.0", END)
-            self.url_entry.insert("1.0", url_error_text)
+            self.url_entry.insert("1.0", URL_ERROR_TEXT)
 
             return
-    
+
         
-        video = Video(url=url, download_path=path if path != DEFAULT_PATH else None)
+        video = Video(url=url, download_path=path.strip() if path != DEFAULT_PATH else None)
         video.download_video()
+        
 
 if __name__ == "__main__":
     app = App()
     app.resizable(False, False)
     app.mainloop()
-
-# def test():
-#     print("wah")
-
-# set_appearance_mode("System")
-# set_default_color_theme("green")
-
-# app = CTk()
-
-
-# app.title("Youtube Downloader")
-# app.geometry("854x480")
-
-# button = CTkButton(master=app, text="test", command=test)
-# button.place(relx=0.5, rely=0.5, anchor=CENTER)
-
-# app.resizable(False, False)
-# app.mainloop()

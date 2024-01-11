@@ -1,6 +1,8 @@
 import pytube as yt
+# from re import match
 import requests
 import os
+
 
 DEFAULT_PATH = os.path.join(os.environ['USERPROFILE'], 'Downloads')
 
@@ -12,6 +14,15 @@ def obtain_video_data(video: yt.YouTube) -> list:
     ]
 
     return video_data
+
+# def is_valid_url(url: str):
+#     REGEX = (
+#         r'(https?://)?(www\.)?'
+#         '(youtube|youtu|youtube-nocookie)\.(com|be)/'
+#         '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})'
+#     )
+
+#     return match(REGEX, url) is not None
 
 
 class Video:
@@ -25,6 +36,7 @@ class Video:
 
     def download_video(self):
         self.video.streams.first().download(output_path=self.path)
+        os.startfile(self.path)
 
     def download_thumbnail(self):
         thumbnail_url: str = self.data[0]
