@@ -9,11 +9,21 @@ DEFAULT_PATH = os.path.join(os.environ['USERPROFILE'], 'Downloads')
 def obtain_video_data(video: yt.YouTube) -> list:
     video_data = [
         video.thumbnail_url,
-        video.title,
+        remove_special_characters(video.title),
         video.author
     ]
 
     return video_data
+
+def remove_special_characters(string: str) -> list:
+    # TODO: add support for removing
+    # emojis from title
+    special_characters = set(r'/\:*?"<>| ')
+
+    for character in special_characters:
+        string = string.replace(character, "-")
+        
+    return string
 
 # def is_valid_url(url: str):
 #     REGEX = (
